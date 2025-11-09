@@ -1,164 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bunny Radio</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
-
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunny Radio</title>
+  <style>
     body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #ff7ad0, #6b5bff 40%, #00f0ff);
-        background-size: 250% 250%;
-        animation: bgMove 12s ease infinite;
-        font-family: 'Montserrat', sans-serif;
-        color: white;
-        text-align: center;
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff77ff, #77ffff);
+      color: #fff;
     }
-
-    @keyframes bgMove {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    .radio-card {
+      background: rgba(0,0,0,0.6);
+      border: 2px solid #fff;
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 20px #ff77ff, 0 0 40px #77ffff;
+      animation: glow 2s infinite alternate;
     }
-
-    h1 {
-        font-family: 'Press Start 2P', cursive;
-        margin-top: 40px;
-        text-shadow: 0 0 10px #fff;
-        font-size: 1.8em;
+    @keyframes glow {
+      0% { box-shadow: 0 0 20px #ff77ff, 0 0 40px #77ffff; }
+      100% { box-shadow: 0 0 40px #ff77ff, 0 0 80px #77ffff; }
     }
-
-    .card {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 15px;
-        width: 90%;
-        max-width: 500px;
-        margin: 20px auto;
-        box-shadow: 0 0 25px rgba(255,255,255,0.25);
-    }
-
-    .now-art {
-        width: 100%;
-        height: 250px;
-        background: url('https://i.imgur.com/jT1Tq2a.png') no-repeat center/cover;
-        border-radius: 10px;
-        box-shadow: 0 0 22px rgba(255,255,255,0.3);
-    }
-
-    audio {
-        width: 100%;
-        margin-top: 20px;
-        filter: drop-shadow(0 0 6px #fff);
-    }
-
-    .now-title {
-        font-size: 1.2em;
-        margin-top: 15px;
-        text-shadow: 0 0 10px #fff, 0 0 20px #ff00f5;
-    }
-
-    .listeners {
-        margin-top: 10px;
-        font-size: 1em;
-        opacity: 0.9;
-        text-shadow: 0 0 5px #fff;
-    }
-
-    /* Neon Visualizer */
-    .visualizer {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        margin: 25px auto 0;
-        height: 80px;
-        gap: 5px;
-    }
-
-    .bar {
-        width: 10px;
-        background: #ff7ad0;
-        box-shadow: 0 0 10px #ff7ad0, 0 0 20px #ff00f5;
-        height: 20px;
-        border-radius: 5px;
-        animation: bounce 1s infinite ease-in-out;
-    }
-
-    .bar:nth-child(2) { animation-delay: 0.1s; }
-    .bar:nth-child(3) { animation-delay: 0.2s; }
-    .bar:nth-child(4) { animation-delay: 0.3s; }
-    .bar:nth-child(5) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-        0%, 100% { height: 20px; }
-        50%      { height: 80px; }
-    }
-
-    /* Mobile tweaks */
+    h1 { margin: 0 0 20px; font-size: 2em; }
+    .now-playing { font-size: 1.1em; margin-bottom: 15px; }
+    audio { width: 100%; margin: 15px 0; border-radius: 10px; outline: none; }
+    .listener-count { font-size: 1.2em; margin-top: 10px; }
     @media (max-width: 600px) {
-        .now-art { height: 180px; }
-        h1 { font-size: 1.4em; margin-top: 25px; }
+      .radio-card { padding: 20px; }
+      h1 { font-size: 1.5em; }
     }
-</style>
+  </style>
 </head>
-
 <body>
-
-<h1>🌴 Bunny Radio 🎧</h1>
-
-<!-- LISTENING CARD -->
-<div class="card">
-
-    <div class="now-art"></div>
-
-    <div class="now-title" id="np">Now Playing: Loading…</div>
-    <div class="listeners" id="listeners">Listeners: Loading…</div>
-
-    <audio controls autoplay>
-        <source src="http://YOUR-IP:8000/live.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Neon visualizer -->
-    <div class="visualizer">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
+  <div class="radio-card">
+    <h1>Bunny Radio</h1>
+    <div class="now-playing">
+      Now Playing: <span id="track-name">Loading...</span>
     </div>
+    <audio id="radio" controls autoplay>
+      Your browser does not support the audio element.
+    </audio>
+    <div class="listener-count">
+      Listeners: <span id="listeners">0</span>
+    </div>
+  </div>
 
-</div>
+  <script>
+    const trackEl = document.getElementById('track-name');
+    const listenersEl = document.getElementById('listeners');
+    const audioEl = document.getElementById('radio');
 
-<script>
-// ✅ Icecast metadata + listener count
-const metaUrl = "http://YOUR-IP:8000/status-json.xsl";
+    // --- Configuration ---
+    const LOCAL_IP = "192.168.1.50"; // your LAN IP
+    const LOCAL_PORT = 8000;
+    const PUBLIC_HTTPS_URL = "https://yourdomain.com/live.mp3"; // optional public HTTPS
 
-async function updateRadioInfo() {
-    try {
-        const r = await fetch(metaUrl);
-        const x = await r.json();
-        const data = x.icestats.source;
-
-        const song = data.title || "Live Stream";
-        const listeners = data.listeners || 0;
-
-        document.getElementById("np").innerText = "Now Playing: " + song;
-        document.getElementById("listeners").innerText = "Listeners: " + listeners;
-
-    } catch (e) {
-        document.getElementById("np").innerText = "Now Playing: Live Stream";
-        document.getElementById("listeners").innerText = "Listeners: --";
+    function getStreamURL() {
+      if (location.protocol === "https:" && PUBLIC_HTTPS_URL) {
+        return PUBLIC_HTTPS_URL; // public HTTPS stream
+      } else {
+        return `http://${LOCAL_IP}:${LOCAL_PORT}/live.mp3`; // local LAN HTTP
+      }
     }
-}
 
-setInterval(updateRadioInfo, 5000);
-updateRadioInfo();
-</script>
+    function getStatusURL() {
+      if (location.protocol === "https:" && PUBLIC_HTTPS_URL) {
+        return PUBLIC_HTTPS_URL.replace("live.mp3","status-json.xsl"); // public JSON
+      } else {
+        return `http://${LOCAL_IP}:${LOCAL_PORT}/status-json.xsl`; // local JSON
+      }
+    }
 
+    async function updateStatus() {
+      const STATUS_URL = getStatusURL();
+      try {
+        const res = await fetch(STATUS_URL);
+        const data = await res.json();
+        if (data.icestats.source) {
+          const source = data.icestats.source;
+          listenersEl.innerText = source.listeners || 0;
+          trackEl.innerText = source.title || "Bunny Radio Live";
+        }
+      } catch(err) {
+        console.log("Failed to fetch Icecast status:", err);
+        listenersEl.innerText = "?";
+        trackEl.innerText = "Bunny Radio Live";
+      }
+    }
+
+    function initAudio() {
+      audioEl.src = getStreamURL();
+      audioEl.play().catch(err => console.log("Autoplay blocked:", err));
+      setInterval(updateStatus, 5000);
+      updateStatus();
+    }
+
+    initAudio();
+  </script>
 </body>
 </html>
